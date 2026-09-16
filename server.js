@@ -3,6 +3,12 @@ const path = require('path');
 const db = require('./db');
 const { buildQueue } = require('./queue');
 const { PRIORITIES } = require('./sla');
+const { escalateOverdueTickets } = require('./escalate');
+
+// How often the automated escalation check runs on its own, with no
+// external scheduler needed. A real deployment would likely also
+// (or instead) run `npm run escalate` from cron — see escalate-run.js.
+const ESCALATION_INTERVAL_MS = 5 * 60 * 1000;
 
 const app = express();
 app.use(express.json({ limit: '100kb' }));
@@ -173,9 +179,23 @@ app.patch('/api/tickets/:id', (req, res) => {
 app.get('/api/agents', (req, res) => res.json(AGENTS));
 app.get('/api/config', (req, res) => res.json({ agents: AGENTS, priorities: PRIORITIES, statuses: STATUSES }));
 
+// Manual trigger for the escalation check (handy for demos and for
+// hooking up an external scheduler that prefers hitting an endpoint
+// over running a CLI). Returns whatever it escalated this run.
+app.post('/api/escalate', (req, res) => {
+  const escalated = escalateOverdueTickets(db);
+  res.json({ escalated, count: escalated.length });
+});
+
 const PORT = process.env.PORT || 3000;
 if (require.main === module) {
   app.listen(PORT, () => console.log(`Helpdesk queue running on http://localhost:${PORT}`));
+
+  // The "automated" half of the automated check: run it once at
+  // startup, then on a recurring timer, so breached tickets get
+  // escalated even if nothing external is scheduling the CLI.
+  escalateOverdueTickets(db);
+  setInterval(() => escalateOverdueTickets(db), ESCALATION_INTERVAL_MS);
 }
 
 module.exports = app;
