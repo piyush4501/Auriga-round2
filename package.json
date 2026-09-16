@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "seed": "node seed.js",
-    "test": "node queue.test.js && node api.test.js"
+    "escalate": "node escalate-run.js",
+    "test": "node queue.test.js && node escalate.test.js && node api.test.js"
   },
   "dependencies": {
     "better-sqlite3": "^11.3.0",
