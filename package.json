@@ -1,0 +1,15 @@
+{
+  "name": "helpdesk-queue",
+  "version": "2.0.0",
+  "description": "A helpdesk ticket queue that always surfaces the most pressing ticket first.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node seed.js",
+    "test": "node queue.test.js && node api.test.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.19.2"
+  }
+}
