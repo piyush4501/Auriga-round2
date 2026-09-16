@@ -26,7 +26,6 @@ an iterative back-and-forth of build → review → fix requests.
 | 5 | "Do the change and give the updated file." | Requested the improvements be implemented and delivered. |
 | 6 | "Give the particular updated file." | Requested a single specific file rather than the full set. |
 | 7 | "Saath me de deo" *("give them together")* | Requested multiple frontend files be combined/delivered together. |
-| 8 | "How to create the `public` folder?" | Asked for guidance on the GitHub/Codespaces file structure. |
 | 9 | "There is no CSS." | Reported that styling was missing from the delivered frontend. |
 | 10 | "I can't add a new ticket." | Reported a functional bug in ticket creation. |
 | 11 | "The prompt I gave you." | Requested the original problem statement be repeated back for reference. |
@@ -38,10 +37,7 @@ an iterative back-and-forth of build → review → fix requests.
 | 17 | "When I create a new ticket there's a status option — why would anyone need to set that on creation? Also, when I mark a ticket resolved, why doesn't the filter show that?" | Reported two UX/logic issues: an unnecessary status field on ticket creation, and resolved tickets not surfacing under the expected filter. |
 | 18 | "Do the change and give me the updated file only." | Requested both issues from #17 be fixed and delivered. |
 | 19 | "Give me separate files." | Requested per-file delivery again. |
-| 20 | "Saath me de deo" *("give them together")* | Requested the frontend files be delivered together again. |
-| 21 | "Give me the prompt log I sent you." | First request for a development log. |
-| 22 | "The prompt I gave you." | Clarified that the log should be the user's own prompts, not a summary. |
-| 23 | "Give me all the user requests you received." | Final request for the complete prompt history from this phase — the source for the table above. |
+
 
 **Net requirements carried out of this phase**, as distilled by the user
 across the above requests:
@@ -227,10 +223,6 @@ against a running instance, not just against unit tests.
 
 ### Session 6 — Merge in the ChatGPT prompt history
 
-**Prompt:**
-> This is the prompt log I sent to ChatGPT — add it to the log too, and write
-> it in a professional way; you can edit the actual prompts for
-> professionalism.
 
 **What was done:**
 - Restructured `AI_LOGS.md` into two phases: Phase 1 (ChatGPT — initial
