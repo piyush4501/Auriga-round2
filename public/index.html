@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Helpdesk Queue</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="app">
+  <div class="topbar"><div class="brand"><h1>Helpdesk Queue</h1><p>Breached SLAs jump to the front. Then priority. Then the earliest deadline. Breached tickets also auto-escalate one level (normal → high → urgent).</p></div><div style="display:flex;gap:8px"><button class="btn" id="escalateBtn">Run escalation check</button><button class="btn primary" id="newTicketBtn">+ New ticket</button></div></div>
+  <section class="cards"><div class="card"><div class="label">Open</div><div class="value" id="openCount">—</div></div><div class="card overdue"><div class="label">Overdue</div><div class="value" id="overdueCount">—</div></div><div class="card urgent"><div class="label">Urgent</div><div class="value" id="urgentCount">—</div></div><div class="card"><div class="label">In progress</div><div class="value" id="progressCount">—</div></div></section>
+  <section class="toolbar">
+    <input class="field" id="search" placeholder="Search ticket, customer, email or issue…" />
+    <select class="select" id="priority"><option value="">All priorities</option><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option></select>
+    <select class="select" id="status"><option value="">Active tickets</option><option value="all">All statuses</option><option value="open">Open</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select>
+    <select class="select" id="assignedTo"><option value="">All assignees</option></select>
+    <label class="check"><input type="checkbox" id="overdueOnly" /> Overdue</label>
+  </section>
+  <section class="tablewrap"><div class="meta"><span id="resultMeta">Loading…</span><span id="refreshMeta">Auto-refresh: 30s</span></div><table><thead><tr><th>Customer</th><th>Issue</th><th>Priority</th><th>Status</th><th>Assigned</th><th>SLA</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table><div id="emptyState" class="empty" style="display:none">No tickets match these filters.</div><div class="pager"><span id="pageLabel">—</span><div class="pagebtns"><button class="btn" id="prevBtn">← Prev</button><button class="btn" id="nextBtn">Next →</button></div></div></section>
+</div>
+
+<div class="modal" id="ticketModal"><div class="modal-card"><div class="modal-head"><strong id="modalTitle">New ticket</strong><button class="btn" id="closeModal">×</button></div><form id="ticketForm"><div class="modal-body"><div class="grid">
+  <div class="form-group"><label>Customer name</label><input id="customer_name" required maxlength="120" /></div>
+  <div class="form-group"><label>Customer email</label><input id="customer_email" type="email" maxlength="254" /></div>
+  <div class="form-group full"><label>Issue title</label><input id="title" required maxlength="180" /></div>
+  <div class="form-group full"><label>Description</label><textarea id="description" maxlength="500"></textarea></div>
+  <div class="form-group"><label>Priority</label><select id="formPriority" required><option value="urgent">Urgent — 2h SLA</option><option value="high">High — 8h SLA</option><option value="normal">Normal — 24h SLA</option></select></div>
+  <div class="form-group"><label>Assigned to</label><select id="formAssignee"><option value="">Unassigned</option></select></div>
+  <div class="form-group edit-only" id="statusGroup"><label>Status</label><select id="formStatus"><option value="open">Open</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></div>
+</div><div id="formError" class="error"></div></div><div class="modal-foot"><button type="button" class="btn" id="cancelBtn">Cancel</button><button type="submit" class="btn primary" id="saveBtn">Create ticket</button></div></form></div></div>
+<div class="toast" id="toast"></div>
+<script src="/app.js" defer></script>
+</body></html>
