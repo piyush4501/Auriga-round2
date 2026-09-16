@@ -9,7 +9,7 @@
 <body>
 <div class="app">
   <div class="topbar"><div class="brand"><h1>Helpdesk Queue</h1><p>Breached SLAs jump to the front. Then priority. Then the earliest deadline. Breached tickets also auto-escalate one level (normal → high → urgent).</p></div><div style="display:flex;gap:8px"><button class="btn" id="escalateBtn">Run escalation check</button><button class="btn primary" id="newTicketBtn">+ New ticket</button></div></div>
-  <section class="cards"><div class="card"><div class="label">Open</div><div class="value" id="openCount">—</div></div><div class="card overdue"><div class="label">Overdue</div><div class="value" id="overdueCount">—</div></div><div class="card urgent"><div class="label">Urgent</div><div class="value" id="urgentCount">—</div></div><div class="card"><div class="label">In progress</div><div class="value" id="progressCount">—</div></div></section>
+  <section class="cards"><div class="card"><div class="label">Open</div><div class="value" id="openCount">—</div></div><div class="card overdue"><div class="label">Overdue</div><div class="value" id="overdueCount">—</div></div><div class="card high"><div class="label">High</div><div class="value" id="highCount">—</div></div><div class="card urgent"><div class="label">Urgent</div><div class="value" id="urgentCount">—</div></div><div class="card"><div class="label">In progress</div><div class="value" id="progressCount">—</div></div></section>
   <section class="toolbar">
     <input class="field" id="search" placeholder="Search ticket, customer, email or issue…" />
     <select class="select" id="priority"><option value="">All priorities</option><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option></select>
