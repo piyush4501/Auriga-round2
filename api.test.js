@@ -29,6 +29,15 @@ function request(method, pathName, body) {
     r=await request('PATCH','/api/tickets/3',{status:'in_progress',assigned_to:'priya'});assert.strictEqual(r.status,200);assert.strictEqual(r.body.assigned_to,'priya');console.log('PASS: update ticket');
     r=await request('POST','/api/tickets',{customer_name:'Bad',title:'Bad',priority:'critical'});assert.strictEqual(r.status,400);console.log('PASS: validation rejects bad priority');
     r=await request('GET','/api/summary');assert.ok(Number.isInteger(r.body.overdue));console.log('PASS: summary endpoint');
+
+    // Regression check: an explicit status=resolved (or closed) filter must
+    // surface matching tickets on its own, without also needing
+    // include_closed=true. Resolving a ticket that's currently visible,
+    // then asking for it by status, is the exact scenario that broke.
+    r=await request('PATCH','/api/tickets/1',{status:'resolved'});assert.strictEqual(r.status,200);
+    r=await request('GET','/api/tickets?status=resolved');assert.strictEqual(r.status,200);assert.ok(r.body.items.some(t=>t.id===1),'resolved ticket should appear when explicitly filtered by status=resolved');console.log('PASS: explicit status=resolved filter surfaces resolved tickets');
+    r=await request('PATCH','/api/tickets/1',{status:'closed'});assert.strictEqual(r.status,200);
+    r=await request('GET','/api/tickets?status=closed');assert.strictEqual(r.status,200);assert.ok(r.body.items.some(t=>t.id===1),'closed ticket should appear when explicitly filtered by status=closed');console.log('PASS: explicit status=closed filter surfaces closed tickets');
   } finally {
     server.close();db.close();
     for(const suffix of ['','-wal','-shm']){const f=dbFile+suffix;if(fs.existsSync(f))fs.rmSync(f)}
