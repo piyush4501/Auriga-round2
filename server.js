@@ -70,6 +70,7 @@ app.get('/api/summary', (req, res) => {
     open: queue.filter((t) => t.status === 'open').length,
     in_progress: queue.filter((t) => t.status === 'in_progress').length,
     overdue: queue.filter((t) => t.is_overdue).length,
+    high: queue.filter((t) => t.priority === 'high' && t.status !== 'resolved' && t.status !== 'closed').length,
     urgent: queue.filter((t) => t.priority === 'urgent' && t.status !== 'resolved' && t.status !== 'closed').length,
   });
 });
@@ -80,9 +81,16 @@ app.get('/api/tickets', (req, res) => {
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
     const pageSize = Math.min(100, Math.max(1, parseInt(req.query.pageSize, 10) || 20));
 
+    if (status && !STATUSES.includes(status)) return res.status(400).json({ error: 'Invalid status filter' });
+
     let rows = db.prepare('SELECT * FROM tickets').all();
 
-    if (include_closed !== 'true') {
+    // Resolved/closed tickets are hidden by default so the queue stays
+    // focused on active work — but an explicit status filter is a direct
+    // request to see exactly that status, so it always wins. Without this
+    // guard, asking for status=resolved would be filtered out by this
+    // exclusion before the status filter below ever got a chance to run.
+    if (include_closed !== 'true' && !status) {
       rows = rows.filter((t) => t.status !== 'resolved' && t.status !== 'closed');
     }
 
@@ -100,7 +108,6 @@ app.get('/api/tickets', (req, res) => {
       queue = queue.filter((t) => t.priority === priority);
     }
     if (status) {
-      if (!STATUSES.includes(status)) return res.status(400).json({ error: 'Invalid status filter' });
       queue = queue.filter((t) => t.status === status);
     }
 
